@@ -53,8 +53,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Ghost\background.png" />
+    <Content Include="Content\Ghost\ghost.png" />
+    <Content Include="Content\Ghost\lightmask.png" />
+    <Content Include="Content\LichtRundNew.png" />
     <Content Include="Content\LichtRund2.png" />
     <Content Include="Content\Background.png" />
+    <Content Include="Content\m461.png" />
     <Content Include="Content\testeye.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>

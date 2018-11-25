@@ -13,13 +13,26 @@ namespace TestEyeGame
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        private Texture2D lichtRund;
-        private Texture2D testeye;
-        private RenderTarget2D blackpixel;
-        private RenderTarget2D renderTarget;
-        private Texture2D background;
+        private readonly GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+
+        public BlendState MultiplicativeBlend { get; set; }
+
+        public Texture2D Background { get; set; }
+
+        public Texture2D Lightmap { get; set; }
+
+        public Texture2D Lightmap2 { get; set; }
+
+        public Texture2D Ghost { get; set; }
+
+        public RenderTarget2D LightmapLayer { get; set; }
+
+        public RenderTarget2D LightLayer { get; set; }
+
+        public RenderTarget2D GhostLayer { get; set; }
+
+        public BlendState LightBlend { get; set; }
 
         public Game1()
         {
@@ -50,15 +63,34 @@ namespace TestEyeGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
-            this.lichtRund = this.Content.Load<Texture2D>("LichtRund2");
-            this.testeye = this.Content.Load<Texture2D>("testeye");
-            this.background = this.Content.Load<Texture2D>("Background");
 
-            this.blackpixel = new RenderTarget2D(this.GraphicsDevice, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
-            this.renderTarget = new RenderTarget2D(this.GraphicsDevice, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
+            this.Ghost = this.Content.Load<Texture2D>("m461");
+            this.Lightmap = this.Content.Load<Texture2D>("LichtRund2");
+            this.Lightmap2 = this.Content.Load<Texture2D>("LichtRundNew");
+            this.Background = this.Content.Load<Texture2D>("Background");
 
             // TODO: use this.Content to load your game content here
+            this.MultiplicativeBlend = new BlendState();
+            //deal with transparency
+            this.MultiplicativeBlend.AlphaBlendFunction = BlendFunction.ReverseSubtract;
+            //this.MultiplicativeBlend.AlphaSourceBlend = Blend.SourceAlpha;
+            //this.MultiplicativeBlend.AlphaDestinationBlend = Blend.Zero;
+            //deal with color
+            this.MultiplicativeBlend.ColorBlendFunction = BlendFunction.Add;
+            this.MultiplicativeBlend.ColorSourceBlend = Blend.DestinationColor;
+            this.MultiplicativeBlend.ColorDestinationBlend = Blend.Zero;
+
+            //Another blendstate to deal with the lightmap later:
+            this.LightBlend = new BlendState();
+            this.LightBlend.ColorBlendFunction = BlendFunction.Subtract;
+            this.LightBlend.ColorSourceBlend = Blend.DestinationColor;
+            this.LightBlend.ColorDestinationBlend = Blend.Zero;
+
+            this.GhostLayer = new RenderTarget2D(this.GraphicsDevice, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
+            this.LightmapLayer = new RenderTarget2D(this.GraphicsDevice, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
+            this.LightLayer = new RenderTarget2D(this.GraphicsDevice, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
         }
+
 
         /// <summary>
         ///     UnloadContent will be called once per game and is the place to unload
@@ -91,52 +123,67 @@ namespace TestEyeGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            var blend = new BlendState
-            {
-                ColorBlendFunction = BlendFunction.Add,
-                ColorSourceBlend = Blend.DestinationColor,
-                ColorDestinationBlend = Blend.Zero
-            };
-
-            var lightBlendState = new BlendState
-            {
-                ColorSourceBlend = Blend.Zero,
-                ColorDestinationBlend = Blend.SourceColor
-            };
-
             var mousePosition = Mouse.GetState().Position;
 
+
             // Draw lights
-            this.GraphicsDevice.SetRenderTarget(this.blackpixel);
+            this.GraphicsDevice.SetRenderTarget(this.LightmapLayer);
+            this.GraphicsDevice.Clear(Color.Black);
+            this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+            this.spriteBatch.Draw(this.Lightmap2, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
+            this.spriteBatch.End();
+            this.GraphicsDevice.SetRenderTarget(null);
+           
+            // Draw lights
+            this.GraphicsDevice.SetRenderTarget(this.LightLayer);
             this.GraphicsDevice.Clear(Color.DarkGray);
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            this.spriteBatch.Draw(this.lichtRund, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.lichtRund.Width * 0.5f, this.lichtRund.Height * 0.5f), 1f, SpriteEffects.None, 0);
+            this.spriteBatch.Draw(this.Lightmap2, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
             this.spriteBatch.End();
             this.GraphicsDevice.SetRenderTarget(null);
 
-            // Draw hidden
-            this.GraphicsDevice.SetRenderTarget(this.renderTarget);
-            this.GraphicsDevice.Clear(Color.White);
-            this.spriteBatch.Begin(SpriteSortMode.Deferred, blend);
-            this.spriteBatch.Draw(this.testeye, new Vector2(this.GraphicsDevice.Viewport.Width / 2f, this.GraphicsDevice.Viewport.Height / 2f), null, Color.White, 0f, new Vector2(this.testeye.Width * 0.5f, this.testeye.Height * 0.5f), 1f, SpriteEffects.None, 0);
-            this.spriteBatch.Draw(this.blackpixel, Vector2.Zero, Color.White);
-            this.spriteBatch.End();
-            this.GraphicsDevice.SetRenderTarget(null);
 
-            // Combine all
+            //I created a simple 250x250 pixel rendertarget 'GhostLayer':
+            this.GraphicsDevice.SetRenderTarget(this.GhostLayer);
+            this.GraphicsDevice.Clear(Color.Transparent);
+
+            //first draw the ghost in the normal way
+            this.spriteBatch.Begin();
+            this.spriteBatch.Draw(this.Ghost, new Vector2(this.GraphicsDevice.Viewport.Width / 2f, this.GraphicsDevice.Viewport.Height / 2f), null, Color.White, 0f, new Vector2(this.Ghost.Width * 0.5f, this.Ghost.Height * 0.5f), 1f, SpriteEffects.None, 0);
+            this.spriteBatch.End();
+
+            //now draw the lightmap to mask so only the 'ghost', 
+            //this uses the blendstate created above.
+            this.spriteBatch.Begin(SpriteSortMode.Deferred, this.MultiplicativeBlend);
+            this.spriteBatch.Draw(this.LightmapLayer, Vector2.Zero, Color.White);
+            this.spriteBatch.End();
+
+
+            //show the result on the screen:
+            this.GraphicsDevice.SetRenderTarget(null);
             this.GraphicsDevice.Clear(Color.Black);
 
-            this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            this.spriteBatch.Draw(this.background, Vector2.Zero, Color.White);
+            this.spriteBatch.Begin();
+            //Draw the game scene:
+            this.spriteBatch.Draw(this.Background, Vector2.Zero, Color.White);
+            //Draw the (masked) ghosts:
+            this.spriteBatch.Draw(this.GhostLayer, Vector2.Zero, Color.White);
+
+            // uncomment the next 'Draw' line and comment out the 'lightblend' 
+            // section to see the alternate result.
+            //spriteBatch.Draw(LightmapLayer, Vector2.Zero, Color.White*0.5f);  
+
             this.spriteBatch.End();
 
-            this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            this.spriteBatch.Draw(this.renderTarget, Vector2.Zero, Color.White);
+            //Lightblend section:
+            //Draw the lightbeam using the lightBlend (though a shader might be better for this part).
+            this.spriteBatch.Begin(SpriteSortMode.Deferred, this.LightBlend);
+            this.spriteBatch.Draw(this.LightLayer, Vector2.Zero, Color.White);
             this.spriteBatch.End();
+            //End lightblend section.
 
-            this.spriteBatch.Begin(SpriteSortMode.Deferred, lightBlendState);
-            this.spriteBatch.Draw(this.blackpixel, Vector2.Zero, Color.White);
-            this.spriteBatch.End();
+            base.Draw(gameTime);
+
 
             base.Draw(gameTime);
         }
