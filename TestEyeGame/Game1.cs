@@ -65,26 +65,24 @@ namespace TestEyeGame
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
 
             this.Ghost = this.Content.Load<Texture2D>("m461");
-            this.Lightmap = this.Content.Load<Texture2D>("LichtRund2");
-            this.Lightmap2 = this.Content.Load<Texture2D>("LichtRundNew");
+            this.Lightmap = this.Content.Load<Texture2D>("Ghost/lightmask");
             this.Background = this.Content.Load<Texture2D>("Background");
 
             // TODO: use this.Content to load your game content here
-            this.MultiplicativeBlend = new BlendState();
-            //deal with transparency
-            this.MultiplicativeBlend.AlphaBlendFunction = BlendFunction.ReverseSubtract;
-            //this.MultiplicativeBlend.AlphaSourceBlend = Blend.SourceAlpha;
-            //this.MultiplicativeBlend.AlphaDestinationBlend = Blend.Zero;
-            //deal with color
-            this.MultiplicativeBlend.ColorBlendFunction = BlendFunction.Add;
-            this.MultiplicativeBlend.ColorSourceBlend = Blend.DestinationColor;
-            this.MultiplicativeBlend.ColorDestinationBlend = Blend.Zero;
+            this.MultiplicativeBlend = new BlendState
+            {
+                AlphaBlendFunction = BlendFunction.ReverseSubtract,
+                ColorBlendFunction = BlendFunction.Add,
+                ColorSourceBlend = Blend.DestinationColor,
+                ColorDestinationBlend = Blend.Zero
+            };
 
             //Another blendstate to deal with the lightmap later:
-            this.LightBlend = new BlendState();
-            this.LightBlend.ColorBlendFunction = BlendFunction.Subtract;
-            this.LightBlend.ColorSourceBlend = Blend.DestinationColor;
-            this.LightBlend.ColorDestinationBlend = Blend.Zero;
+            this.LightBlend = new BlendState
+            {
+                ColorSourceBlend = Blend.Zero,
+                ColorDestinationBlend = Blend.SourceColor
+            };
 
             this.GhostLayer = new RenderTarget2D(this.GraphicsDevice, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
             this.LightmapLayer = new RenderTarget2D(this.GraphicsDevice, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
@@ -123,27 +121,27 @@ namespace TestEyeGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            var mousePosition = Mouse.GetState().Position;
+            var mousePosition = new Vector2(this.GraphicsDevice.Viewport.Width / 2f, this.GraphicsDevice.Viewport.Height / 2f);// Mouse.GetState().Position;
 
 
             // Draw lights
             this.GraphicsDevice.SetRenderTarget(this.LightmapLayer);
             this.GraphicsDevice.Clear(Color.Black);
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            this.spriteBatch.Draw(this.Lightmap2, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
+            this.spriteBatch.Draw(this.Lightmap, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
             this.spriteBatch.End();
             this.GraphicsDevice.SetRenderTarget(null);
-           
+
             // Draw lights
             this.GraphicsDevice.SetRenderTarget(this.LightLayer);
             this.GraphicsDevice.Clear(Color.DarkGray);
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            this.spriteBatch.Draw(this.Lightmap2, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
+            this.spriteBatch.Draw(this.Lightmap, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
             this.spriteBatch.End();
             this.GraphicsDevice.SetRenderTarget(null);
 
 
-            //I created a simple 250x250 pixel rendertarget 'GhostLayer':
+            //I created a simple rendertarget 'GhostLayer':
             this.GraphicsDevice.SetRenderTarget(this.GhostLayer);
             this.GraphicsDevice.Clear(Color.Transparent);
 
@@ -175,12 +173,12 @@ namespace TestEyeGame
 
             this.spriteBatch.End();
 
-            //Lightblend section:
-            //Draw the lightbeam using the lightBlend (though a shader might be better for this part).
-            this.spriteBatch.Begin(SpriteSortMode.Deferred, this.LightBlend);
-            this.spriteBatch.Draw(this.LightLayer, Vector2.Zero, Color.White);
-            this.spriteBatch.End();
-            //End lightblend section.
+            ////Lightblend section:
+            ////Draw the lightbeam using the lightBlend (though a shader might be better for this part).
+            //this.spriteBatch.Begin(SpriteSortMode.Deferred, this.LightBlend);
+            //this.spriteBatch.Draw(this.LightLayer, Vector2.Zero, Color.White);
+            //this.spriteBatch.End();
+            ////End lightblend section.
 
             base.Draw(gameTime);
 
