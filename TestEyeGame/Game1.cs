@@ -132,13 +132,13 @@ namespace TestEyeGame
             this.spriteBatch.End();
             this.GraphicsDevice.SetRenderTarget(null);
 
-            // Draw lights
-            this.GraphicsDevice.SetRenderTarget(this.LightLayer);
-            this.GraphicsDevice.Clear(Color.DarkGray);
-            this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            this.spriteBatch.Draw(this.Lightmap, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
-            this.spriteBatch.End();
-            this.GraphicsDevice.SetRenderTarget(null);
+            //// Draw lights
+            //this.GraphicsDevice.SetRenderTarget(this.LightLayer);
+            //this.GraphicsDevice.Clear(Color.DarkGray);
+            //this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+            //this.spriteBatch.Draw(this.Lightmap, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
+            //this.spriteBatch.End();
+            //this.GraphicsDevice.SetRenderTarget(null);
 
 
             //I created a simple rendertarget 'GhostLayer':
