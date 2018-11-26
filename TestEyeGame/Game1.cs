@@ -130,7 +130,7 @@ namespace TestEyeGame
 
             // Draw lights
             this.GraphicsDevice.SetRenderTarget(this.LightLayer);
-            this.GraphicsDevice.Clear(new Color(40, 40, 40));
+            this.GraphicsDevice.Clear(new Color(140, 140, 140));
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             this.spriteBatch.Draw(this.Lightmap, new Vector2(mousePosition.X, mousePosition.Y), null, Color.White, 0f, new Vector2(this.Lightmap.Width * 0.5f, this.Lightmap.Height * 0.5f), 1f, SpriteEffects.None, 0);
             this.spriteBatch.End();
