@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TestEyeGame
+namespace GhostLight
 {
 #if WINDOWS || LINUX
     /// <summary>

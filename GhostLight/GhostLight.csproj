@@ -9,8 +9,8 @@
     <ProjectGuid>{8643B4DE-3A4E-4CE0-A53B-3B59D73B1D09}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestEyeGame</RootNamespace>
-    <AssemblyName>TestEyeGame</AssemblyName>
+    <RootNamespace>GhostLight</RootNamespace>
+    <AssemblyName>GhostLight</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -53,13 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Ghost\background.png" />
-    <Content Include="Content\Ghost\ghost.png" />
-    <Content Include="Content\Ghost\lightmask.png" />
-    <Content Include="Content\LichtRund2.png" />
+    <Content Include="Content\Light.png" />
     <Content Include="Content\Background.png" />
-    <Content Include="Content\m461.png" />
-    <Content Include="Content\testeye.png" />
+    <Content Include="Content\Ghost.png" />
+    <Content Include="Content\ShaderAlternative.fx" />
+    <Content Include="Content\Shader.fx" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
