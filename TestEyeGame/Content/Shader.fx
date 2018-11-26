@@ -17,12 +17,12 @@ float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, flo
     float4 colorLight = LightTexture.Sample(LightTextureSampler, texCoord.xy);
     
     float4 baseColor = colorScreen * colorLight;
-    //baseColor.a = colorLight / colorScreen;
+    baseColor.a = colorLight / colorScreen;
     
-    //if (dot(baseColor, float3(1, 1, 1)) == 0)
-    //{
-    //    clip(-1);
-    //}
+    if (dot(baseColor, float3(1, 1, 1)) == 0)
+    {
+        clip(-1);
+    }
  
     return baseColor;
 }
