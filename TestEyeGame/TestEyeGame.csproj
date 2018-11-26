@@ -59,6 +59,7 @@
     <Content Include="Content\LichtRund2.png" />
     <Content Include="Content\Background.png" />
     <Content Include="Content\m461.png" />
+    <Content Include="Content\Shader.fx" />
     <Content Include="Content\testeye.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
