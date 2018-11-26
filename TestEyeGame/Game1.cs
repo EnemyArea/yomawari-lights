@@ -150,11 +150,13 @@ namespace TestEyeGame
             this.spriteBatch.End();
             this.GraphicsDevice.SetRenderTarget(null);
 
-            this.myShaderEffect.Parameters["LightTexture"]?.SetValue(this.LightmapLayer);
-
+            
+            this.GraphicsDevice.Clear(Color.CornflowerBlue);
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             this.spriteBatch.Draw(this.Background, Vector2.Zero, Color.White);
             this.spriteBatch.End();
+
+            this.myShaderEffect.Parameters["LightTexture"]?.SetValue(this.LightmapLayer);
 
             this.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, this.myShaderEffect);
             this.spriteBatch.Draw(this.GhostLayer, Vector2.Zero, Color.White);
