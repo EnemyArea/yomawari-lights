@@ -1,4 +1,13 @@
-﻿Texture2D ScreenTexture;
+﻿#if OPENGL
+#define SV_POSITION POSITION
+#define VS_SHADERMODEL vs_3_0
+#define PS_SHADERMODEL ps_3_0
+#else
+#define VS_SHADERMODEL vs_4_0_level_9_1
+#define PS_SHADERMODEL ps_4_0_level_9_1
+#endif
+
+Texture2D ScreenTexture;
 Texture2D LightTexture;
 float4 ColorKey;
 
@@ -48,6 +57,6 @@ technique PassThrough
 {
 	pass Pass1
 	{
-		PixelShader = compile ps_4_0 PixelShaderFunction();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunction();
 	}
 }

@@ -53,15 +53,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\geist.png" />
+    <Content Include="Content\jan.jpeg" />
     <Content Include="Content\Light.png" />
     <Content Include="Content\Background.png" />
     <Content Include="Content\Ghost.png" />
+    <Content Include="Content\LightCone.png" />
     <Content Include="Content\ShaderAlternative.fx" />
     <Content Include="Content\Shader.fx" />
+    <Content Include="Content\WaveShader.fx" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <MonoGameContentReference Include="Content\Content.mgcb">
+      <SubType>Designer</SubType>
+    </MonoGameContentReference>
     <None Include="app.manifest" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
